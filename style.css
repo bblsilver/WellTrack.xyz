@@ -1,10 +1,6 @@
 :root {
     --pastel-red: #ff9999;
     --pastel-red-dark: #ff8080;
-    --pastel-green: #b3ffb3;
-    --pastel-green-dark: #9ce69c;
-    --btn-gray: #7d858d;
-    --btn-gray-dark: #6c757d;
     --bg-color: #f4f6f8;
     --card-bg: #ffffff;
     --text-dark: #333333;
@@ -58,7 +54,7 @@ body {
 }
 
 .app-container {
-    max-width: 850px;
+    max-width: 800px;
     margin: 40px auto;
     padding: 40px;
     background: var(--card-bg);
@@ -78,36 +74,32 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 25px;
-    padding-top: 10px;
 }
 
 .app-header h1 {
     margin: 0;
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--text-dark);
+    font-size: 1.8rem;
+    font-weight: 600;
 }
 
 #navViewBtn {
-    font-size: 0.9rem;
+    font-size: 1.4rem;
     cursor: pointer;
     background: var(--pastel-red);
     border: none;
-    padding: 10px 16px;
+    padding: 8px 12px;
     border-radius: 8px;
     color: white;
-    font-weight: 600;
-    transition: background 0.2s, transform 0.1s;
+    transition: background 0.2s;
 }
 
 #navViewBtn:hover {
     background: var(--pastel-red-dark);
-    transform: scale(1.05);
 }
 
 .global-checklist-builder {
     background: #fafafa;
-    padding: 24px;
+    padding: 20px;
     border-radius: 12px;
     margin-bottom: 35px;
     border: 1px dashed #ddd;
@@ -121,137 +113,77 @@ body {
 
 .builder-inputs {
     display: flex;
-    width: 100%;
-    height: 50px;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    border: 1px solid #ddd;
+    gap: 10px;
 }
 
 .builder-inputs input {
     flex-grow: 1;
-    padding: 0 16px;
-    border: none;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
     font-size: 0.95rem;
     outline: none;
-    background: white;
-    font-family: inherit;
-    height: 100%;
-    box-sizing: border-box;
-}
-
-.builder-inputs input:focus {
-    border-color: var(--pastel-red);
 }
 
 .builder-inputs button {
-    background: var(--btn-gray);
+    background: var(--pastel-red);
     color: white;
     border: none;
-    padding: 0 24px;
+    padding: 0 20px;
+    border-radius: 8px;
     font-weight: 600;
-    font-size: 0.95rem;
     cursor: pointer;
-    height: 100%;
     transition: background 0.2s;
-    white-space: nowrap;
 }
 
 .builder-inputs button:hover {
-    background: var(--btn-gray-dark);
+    background: var(--pastel-red-dark);
 }
 
 #globalHabitList {
     list-style: none;
     padding: 0;
     margin: 15px 0 0 0;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
 }
 
 #globalHabitList li {
     background: white;
-    padding: 12px 16px;
-    border-radius: 8px;
+    padding: 10px 14px;
+    border-radius: 6px;
     border: 1px solid #eee;
     font-size: 0.95rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    opacity: 1;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.checklist-arrow {
-    width: 14px;
-    height: 14px;
-    margin-right: 10px;
-    vertical-align: middle;
-}
-
-.fade-in-item {
-    animation: fadeIn 0.3s ease forwards;
-}
-
-.fade-out-item {
-    opacity: 0 !important;
-    transform: translateY(-5px);
-}
-
-.view-fade {
-    animation: fadeIn 0.4s ease forwards;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(4px); }
-    to { opacity: 1; transform: translateY(0); }
 }
 
 .month-wrapper h2 {
-    margin: 0 0 20px 0;
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--text-dark);
+    margin: 0 0 15px 0;
+    font-size: 1.3rem;
+    color: var(--text-light);
 }
 
 .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 14px;
+    gap: 12px;
 }
 
 .day-cell {
     background: #fafafa;
     aspect-ratio: 1 / 1;
     border: 1px solid #eaeaea;
-    border-radius: 12px;
+    border-radius: 10px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 12px;
-    box-sizing: border-box;
+    justify-content: center;
     cursor: pointer;
-    transition: transform 0.15s, box-shadow 0.15s, background-color 0.2s;
-}
-
-.day-number {
     font-weight: 600;
     font-size: 1.1rem;
-    color: #444;
-}
-
-.today-star {
-    width: 22px;
-    height: 22px;
+    transition: transform 0.15s, box-shadow 0.15s;
 }
 
 .day-cell:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     background: white;
-    border-color: var(--pastel-red);
 }
 
 .year-grid {
@@ -318,71 +250,14 @@ body {
 }
 
 .modal-section h4 {
-    margin: 0 0 12px 0;
+    margin: 0 0 10px 0;
     font-size: 1rem;
     color: var(--text-dark);
 }
 
 .modal-section input[type="range"] {
     width: 100%;
-    height: 6px;
     accent-color: var(--pastel-red);
-    cursor: pointer;
-}
-
-.modal-habit-label {
-    display: flex;
-    align-items: center;
-    position: relative;
-    cursor: pointer;
-    padding: 6px 0;
-    font-size: 0.95rem;
-    user-select: none;
-}
-
-.modal-habit-label input[type="checkbox"] {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    height: 0;
-    width: 0;
-}
-
-.custom-checkbox {
-    height: 20px;
-    width: 20px;
-    background-color: #eee;
-    border-radius: 6px;
-    margin-right: 12px;
-    display: inline-block;
-    position: relative;
-    transition: background-color 0.2s, transform 0.1s;
-}
-
-.modal-habit-label:hover input ~ .custom-checkbox {
-    background-color: #e2e2e2;
-    transform: scale(1.04);
-}
-
-.modal-habit-label input:checked ~ .custom-checkbox {
-    background-color: var(--pastel-red);
-}
-
-.custom-checkbox:after {
-    content: "";
-    position: absolute;
-    display: none;
-    left: 7px;
-    top: 3px;
-    width: 5px;
-    height: 10px;
-    border: solid white;
-    border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
-}
-
-.modal-habit-label input:checked ~ .custom-checkbox:after {
-    display: block;
 }
 
 .modal-section textarea {
@@ -398,18 +273,18 @@ body {
 
 .save-modal-btn {
     width: 100%;
-    background: var(--pastel-green);
-    color: #2b542b;
+    background: var(--pastel-red);
+    color: white;
     border: none;
     padding: 14px;
     border-radius: 8px;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    box-shadow: 0 3px 10px rgba(179, 255, 179, 0.4);
     transition: background 0.2s;
 }
 
 .save-modal-btn:hover {
-    background: var(--pastel-green-dark);
+    background: var(--pastel-red-dark);
 }
+
