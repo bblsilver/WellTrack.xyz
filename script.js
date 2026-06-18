@@ -130,7 +130,6 @@ function buildYearlyHealthGraph() {
     let diffCount = 0;
     let previousRating = null;
 
-    // Read and analyze chronological days to calculate summary data metrics
     const keys = [];
     for (let k = 0; k < localStorage.length; k++) {
         const key = localStorage.key(k);
@@ -205,7 +204,6 @@ function buildYearlyHealthGraph() {
         container.appendChild(barWrapper);
     });
 
-    // Inject metrics straight into widgets
     document.getElementById("statDaysLogged").innerText = totalDaysLogged;
     document.getElementById("statChecklistsDone").innerText = totalChecklistsCompleted;
     document.getElementById("statBestMonth").innerText = highestMonthName;
