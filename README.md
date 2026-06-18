@@ -1,9 +1,7 @@
 # WellTrack.xyz
 
-```diff
-- Please note that WellTrack.xyz is still a work in progress.
-```
-
+> [!IMPORTANT]
+> Please note that WellTrack.xyz is still a work in progress.
 
 WellTrack.xyz is a completely client-sided personal health calender meant to establish & maintain goals. It functions as a progress journal and analytic platform for your goals & personal health/well-being. 
 
