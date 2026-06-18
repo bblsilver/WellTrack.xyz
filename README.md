@@ -1,8 +1,5 @@
 # WellTrack.xyz
 
-> [!IMPORTANT]
-> Please note that WellTrack.xyz is still a work in progress.
-
 > [!WARNING]
 > Please note that WellTrack.xyz is still a work in progress.
 
