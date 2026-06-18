@@ -88,23 +88,16 @@ body {
 
 .header-buttons {
     display: flex;
-    gap: 16px;
+    gap: 12px;
     align-items: center;
-    justify-content: center;
 }
 
-.header-btn-img-clock {
+/* Fixed: Code rules force identical bounding boxes and layout scaling */
+.header-btn-svg {
     width: 26px;
     height: 26px;
-    object-fit: contain;
     display: block;
-}
-
-.header-btn-img-cal {
-    width: 32px;
-    height: 32px;
-    object-fit: contain;
-    display: block;
+    transition: opacity 0.2s;
 }
 
 #navViewBtn, #navStatsBtn {
@@ -117,13 +110,10 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: opacity 0.2s;
-    height: 32px;
-    width: 32px;
 }
 
-#navViewBtn:hover, #navStatsBtn:hover {
-    opacity: 0.7;
+#navViewBtn:hover .header-btn-svg, #navStatsBtn:hover .header-btn-svg {
+    opacity: 0.65;
 }
 
 .global-checklist-builder {
