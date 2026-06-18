@@ -1,12 +1,13 @@
 let currentYear = new Date().getFullYear();
 let currentMonth = new Date().getMonth();
 let selectedDateKey = null;
-let healthChartInstance = null;
 
 const monthsArray = [
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
 ];
+
+const shortMonthsArray = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 const arrowSvgBase64 = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTguNSA1bDYgNi02IDZaIiBmaWxsPSIjZmY5OTk5IiBzdHJva2U9IiNmZjk5OTkiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+";
 
@@ -58,7 +59,6 @@ function renderMonthView(year, month) {
         grid.appendChild(dayCell);
     }
 }
-
 function getColorByRating(rating) {
     if (rating >= 0 && rating <= 2) return "#ff9999";
     if (rating >= 3 && rating <= 4) return "#ffcc99";
@@ -127,7 +127,8 @@ function buildYearlyHealthGraph() {
     for (let k = 0; k < localStorage.length; k++) {
         const keyString = localStorage.key(k);
         if (keyString && keyString.startsWith(`${currentYear}-`)) {
-            const monthIndex = parseInt(keyString.split("-")[1], 10) - 1;
+            const parts = keyString.split("-");
+            const monthIndex = parseInt(parts[1], 10) - 1;
             const logItem = JSON.parse(localStorage.getItem(keyString));
             if (logItem && logItem.rating !== undefined && logItem.rating !== "") {
                 datasetArray[monthIndex] += Number(logItem.rating);
@@ -136,48 +137,35 @@ function buildYearlyHealthGraph() {
         }
     }
 
-    const compiledAverages = datasetArray.map((sumVal, idx) => {
-        return countArray[idx] > 0 ? (sumVal / countArray[idx]).toFixed(1) : 0;
-    });
+    const container = document.getElementById("chartBarsContainer");
+    if (!container) return;
+    container.innerHTML = "";
 
-    const ctxNode = document.getElementById('yearlyHealthChart').getContext('2d');
-    
-    if (healthChartInstance) {
-        healthChartInstance.destroy();
-    }
+    shortMonthsArray.forEach((monthLabel, idx) => {
+        const sumVal = datasetArray[idx];
+        const count = countArray[idx];
+        const average = count > 0 ? (sumVal / count).toFixed(1) : 0;
+        const barHeightPercentage = (average / 10) * 100;
 
-    healthChartInstance = new Chart(ctxNode, {
-        type: 'bar',
-        data: {
-            labels: monthsArray,
-            datasets: [{
-                label: 'Average Day Rating (0 - 10)',
-                data: compiledAverages,
-                backgroundColor: '#ff9999',
-                borderColor: '#ff8080',
-                borderWidth: 1,
-                borderRadius: 6
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    min: 0,
-                    max: 10,
-                    grid: { color: '#eaeaea' },
-                    ticks: { color: '#666' }
-                },
-                x: {
-                    grid: { display: false },
-                    ticks: { color: '#666' }
-                }
-            },
-            plugins: {
-                legend: { display: false }
-            }
-        }
+        const barWrapper = document.createElement("div");
+        barWrapper.className = "custom-chart-bar-wrapper";
+
+        const valSpan = document.createElement("span");
+        valSpan.className = "custom-chart-value";
+        valSpan.innerText = average > 0 ? average : "-";
+
+        const barDiv = document.createElement("div");
+        barDiv.className = "custom-chart-bar";
+        barDiv.style.height = barHeightPercentage > 0 ? `${barHeightPercentage}%` : "4px";
+
+        const labelSpan = document.createElement("span");
+        labelSpan.className = "custom-chart-label";
+        labelSpan.innerText = monthLabel;
+
+        barWrapper.appendChild(valSpan);
+        barWrapper.appendChild(barDiv);
+        barWrapper.appendChild(labelSpan);
+        container.appendChild(barWrapper);
     });
 }
 function openDayModal(dateKey) {
