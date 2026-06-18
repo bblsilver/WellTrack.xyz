@@ -7,6 +7,8 @@ const monthsArray = [
     "July", "August", "September", "October", "November", "December"
 ];
 
+const arrowSvgBase64 = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTguNSA1bDYgNi02IDZaIiBmaWxsPSIjZmY5OTk5IiBzdHJva2U9IiNmZjk5OTkiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+";
+
 function enterApp() {
     document.getElementById("welcomeOverlay").style.display = "none";
     document.getElementById("appContainer").classList.remove("app-blurred");
@@ -14,19 +16,28 @@ function enterApp() {
     renderMonthView(currentYear, currentMonth);
 }
 
+function updateSliderFill(slider) {
+    const val = ((slider.value - slider.min) / (slider.max - slider.min)) * 100;
+    slider.style.setProperty('--slider-progress', val + '%');
+}
+
 function renderMonthView(year, month) {
     currentYear = year;
     currentMonth = month;
     
+    const viewContainer = document.getElementById("monthView");
+    viewContainer.classList.remove("view-fade");
+    void viewContainer.offsetWidth; // Trigger reflow for animation reset
+    viewContainer.classList.add("view-fade");
+
     document.getElementById("yearView").style.display = "none";
-    document.getElementById("monthView").style.display = "block";
+    viewContainer.style.display = "block";
     document.getElementById("currentMonthYear").innerText = `${monthsArray[month]} ${year}`;
 
     const grid = document.getElementById("calendarGrid");
     grid.innerHTML = "";
 
     const totalDays = new Date(year, month + 1, 0).getDate();
-    
     const today = new Date();
     const todayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
@@ -38,7 +49,6 @@ function renderMonthView(year, month) {
         
         let cellHTML = `<span class="day-number">${day}</span>`;
         if (dateKey === todayKey) {
-            // FIXED: Using a safe Base64 string version of your star icon to pass GitHub's security checking systems cleanly
             cellHTML += `<img class="today-star" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTEyIC41ODdsMy42NjggNy40MzEgOC4yIDEuMTkyLTUuOTM0IDUuNzg1IDEuNCA4LjE2OEwxMiAxOC44OTZsLTcuMzM0IDMuODU3IDEuNC04LjE2OEwuMTMyIDkuNDFsOC4yLTEuMTkyeiIgZmlsbD0iI2ZmYjNiMyIvPjwvc3ZnPg==" alt="Today">`;
         }
         dayCell.innerHTML = cellHTML;
@@ -72,6 +82,9 @@ function toggleCalendarView() {
     if (yearView.style.display === "none") {
         monthView.style.display = "none";
         yearView.style.display = "grid";
+        yearView.classList.remove("view-fade");
+        void yearView.offsetWidth;
+        yearView.classList.add("view-fade");
         renderYearView();
     } else {
         yearView.style.display = "none";
@@ -97,30 +110,41 @@ function openDayModal(dateKey) {
     selectedDateKey = dateKey;
     document.getElementById("modalDayTitle").innerText = `Log Health for ${dateKey}`;
     
-    document.getElementById("dayRating").value = 5;
+    const slider = document.getElementById("dayRating");
+    slider.value = 5;
     document.getElementById("ratingValue").innerText = 5;
-    document.getElementById("dayNotes").value = "";
+    updateSliderFill(slider);
+    
+    // Add dynamically tracked event listeners for on-the-fly line fills
+    slider.oninput = function() {
+        document.getElementById('ratingValue').innerText = this.value;
+        updateSliderFill(this);
+    };
 
+    document.getElementById("dayNotes").value = "";
     renderModalChecklist();
 
     const savedData = localStorage.getItem(dateKey);
     if (savedData) {
         const parsed = JSON.parse(savedData);
         if (parsed.rating !== undefined) {
-            document.getElementById("dayRating").value = parsed.rating;
+            slider.value = parsed.rating;
             document.getElementById("ratingValue").innerText = parsed.rating;
+            updateSliderFill(slider);
         }
         if (parsed.notes) {
             document.getElementById("dayNotes").value = parsed.notes;
         }
         if (parsed.habits) {
-            const checks = document.querySelectorAll(".modal-habit-check");
-            checks.forEach(box => {
-                const id = box.getAttribute("data-id");
-                if (parsed.habits[id]) {
-                    box.checked = true;
-                }
-            });
+            setTimeout(() => {
+                const checks = document.querySelectorAll(".modal-habit-check");
+                checks.forEach(box => {
+                    const id = box.getAttribute("data-id");
+                    if (parsed.habits[id]) {
+                        box.checked = true;
+                    }
+                });
+            }, 10);
         }
     }
 
@@ -144,16 +168,26 @@ function renderModalChecklist() {
 
     globalHabits.forEach(habit => {
         const label = document.createElement("label");
-        label.style.display = "block";
-        label.style.marginBottom = "5px";
+        label.className = "modal-habit-label";
 
         const box = document.createElement("input");
         box.type = "checkbox";
         box.className = "modal-habit-check";
         box.setAttribute("data-id", habit.id);
 
+        const customSpan = document.createElement("span");
+        customSpan.className = "custom-checkbox";
+
         label.appendChild(box);
-        label.appendChild(document.createTextNode(` ${habit.text}`));
+        label.appendChild(customSpan);
+        
+        // Add custom checklist arrow right in front of the text description
+        const arrowImg = document.createElement("img");
+        arrowImg.className = "checklist-arrow";
+        arrowImg.src = arrowSvgBase64;
+        
+        label.appendChild(arrowImg);
+        label.appendChild(document.createTextNode(habit.text));
         container.appendChild(label);
     });
 }
@@ -197,39 +231,51 @@ function addGlobalHabit() {
     localStorage.setItem("globalHabits", JSON.stringify(globalHabits));
     input.value = "";
     
-    loadGlobalHabits();
+    loadGlobalHabits(newHabit.id);
 }
 
-function loadGlobalHabits() {
+function loadGlobalHabits(newlyAddedId = null) {
     const list = document.getElementById("globalHabitList");
     list.innerHTML = "";
 
     const globalHabits = JSON.parse(localStorage.getItem("globalHabits") || "[]");
     globalHabits.forEach(habit => {
         const li = document.createElement("li");
-        li.style.display = "flex";
-        li.style.justifyContent = "space-between";
-        li.style.marginBottom = "5px";
+        li.id = habit.id;
+
+        // Apply visual fade-in animation trigger for fresh items
+        if (habit.id === newlyAddedId) {
+            li.className = "fade-in-item";
+        }
+
+        const leftSide = document.createElement("div");
+        leftSide.style.display = "flex";
+        leftSide.style.alignItems = "center";
+
+        const arrowImg = document.createElement("img");
+        arrowImg.className = "checklist-arrow";
+        arrowImg.src = arrowSvgBase64;
 
         const textSpan = document.createElement("span");
         textSpan.innerText = habit.text;
+
+        leftSide.appendChild(arrowImg);
+        leftSide.appendChild(textSpan);
 
         const delBtn = document.createElement("button");
         delBtn.innerText = "✕";
         delBtn.style.border = "none";
         delBtn.style.background = "none";
         delBtn.style.cursor = "pointer";
+        delBtn.style.color = "#999";
         delBtn.onclick = () => removeGlobalHabit(habit.id);
 
-        li.appendChild(textSpan);
+        li.appendChild(leftSide);
         li.appendChild(delBtn);
         list.appendChild(li);
     });
 }
 
 function removeGlobalHabit(id) {
-    let globalHabits = JSON.parse(localStorage.getItem("globalHabits") || "[]");
-    globalHabits = globalHabits.filter(habit => habit.id !== id);
-    localStorage.setItem("globalHabits", JSON.stringify(globalHabits));
-    loadGlobalHabits();
-}
+    const element = document.getElementById(id);
+    if (element) {
