@@ -26,15 +26,24 @@ function renderMonthView(year, month) {
     grid.innerHTML = "";
 
     const totalDays = new Date(year, month + 1, 0).getDate();
+    
+    const today = new Date();
+    const todayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
     for (let day = 1; day <= totalDays; day++) {
         const dayCell = document.createElement("div");
         dayCell.className = "day-cell";
-        dayCell.innerText = day;
 
         const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        const savedData = localStorage.getItem(dateKey);
         
+        // Structure day content: Number left, Star right if it's today
+        let cellHTML = `<span class="day-number">${day}</span>`;
+        if (dateKey === todayKey) {
+            cellHTML += `<img class="today-star" src="data:image/svg+xml,%3Csvg xmlns='http://w3.org' viewBox='0 0 24 24'%3E%3Cpath d='M12 .587l3.668 7.431 8.2 1.192-5.934 5.785 1.4 8.168L12 18.896l-7.334 3.857 1.4-8.168L.132 9.41l8.2-1.192z' fill='%23ffb3b3'/%3E%3C/svg%3E" alt="Today">`;
+        }
+        dayCell.innerHTML = cellHTML;
+
+        const savedData = localStorage.getItem(dateKey);
         if (savedData) {
             const parsed = JSON.parse(savedData);
             if (parsed.rating !== undefined && parsed.rating !== "") {
