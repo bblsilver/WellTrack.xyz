@@ -245,7 +245,6 @@ body {
     margin-top: 10px;
 }
 
-/* Custom CSS layout chart container styles */
 .chart-container {
     display: flex;
     justify-content: space-around;
@@ -289,6 +288,52 @@ body {
     color: var(--text-dark);
     font-weight: 700;
     margin-bottom: 4px;
+}
+
+/* New Summary Statistics Widget Layout Styling */
+.summary-stats-box {
+    background: #fafafa;
+    border: 1px solid #eaeaea;
+    border-radius: 12px;
+    padding: 24px;
+    margin-top: 25px;
+}
+
+.summary-stats-box h3 {
+    margin: 0 0 20px 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.stats-grid-box {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.stat-card-item {
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.stat-num-val {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--pastel-red-dark);
+    margin-bottom: 4px;
+}
+
+.stat-lbl-txt {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    font-weight: 600;
 }
 
 .modal-backdrop {
