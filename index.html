@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WellTrack - Personal Health Calendar</title>
-    <link rel="stylesheet" href="style.css?v=1.5">
+    <link rel="stylesheet" href="style.css?v=3.0">
 </head>
 <body>
 
@@ -19,11 +19,11 @@
         
         <header class="app-header">
             <h1 id="calendarTitle">WellTrack</h1>
-            <button id="navViewBtn" onclick="toggleCalendarView()" title="Change View">View All Months</button>
+            <button id="navViewBtn" onclick="toggleCalendarView()" title="Change View">📅</button>
         </header>
 
         <section class="global-checklist-builder">
-            <h3>Create Daily Habit Checklist</h3>
+            <h3>📋 Create Daily Habit Checklist</h3>
             <div class="builder-inputs">
                 <input type="text" id="newHabitInput" placeholder="Add a habit (e.g., Drink Water)...">
                 <button onclick="addGlobalHabit()">Add Habit</button>
@@ -48,7 +48,7 @@
 
             <div class="modal-section">
                 <label for="dayRating">Rate your day (0 - 10): <b id="ratingValue">5</b></label>
-                <input type="range" id="dayRating" min="0" max="10" value="5">
+                <input type="range" id="dayRating" min="0" max="10" value="5" oninput="document.getElementById('ratingValue').innerText = this.value">
             </div>
 
             <div class="modal-section">
@@ -65,6 +65,6 @@
         </div>
     </div>
 
-    <script src="script.js?v=1.5"></script>
+    <script src="script.js?v=3.0"></script>
 </body>
 </html>
