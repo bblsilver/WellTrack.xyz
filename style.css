@@ -1,6 +1,10 @@
 :root {
     --pastel-red: #ff9999;
     --pastel-red-dark: #ff8080;
+    --pastel-green: #b3ffb3;
+    --pastel-green-dark: #9ce69c;
+    --btn-gray: #7d858d;
+    --btn-gray-dark: #6c757d;
     --bg-color: #f4f6f8;
     --card-bg: #ffffff;
     --text-dark: #333333;
@@ -116,47 +120,46 @@ body {
     margin: 0 0 15px 0;
     font-size: 1.1rem;
     color: var(--text-dark);
-    display: flex;
-    align-items: center;
-    gap: 8px;
 }
 
+/* Unified input box layout bar style from image converter */
 .builder-inputs {
     display: flex;
-    gap: 12px;
+    width: 100%;
+    height: 50px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #ddd;
 }
 
 .builder-inputs input {
     flex-grow: 1;
-    padding: 14px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    padding: 0 16px;
+    border: none;
     font-size: 0.95rem;
     outline: none;
     background: white;
     font-family: inherit;
+    height: 100%;
     box-sizing: border-box;
 }
 
-.builder-inputs input:focus {
-    border-color: var(--pastel-red);
-}
-
 .builder-inputs button {
-    background: var(--pastel-red);
+    background: var(--btn-gray);
     color: white;
     border: none;
     padding: 0 24px;
-    border-radius: 8px;
     font-weight: 600;
     font-size: 0.95rem;
     cursor: pointer;
+    height: 100%;
     transition: background 0.2s;
     white-space: nowrap;
 }
 
 .builder-inputs button:hover {
-    background: var(--pastel-red-dark);
+    background: var(--btn-gray-dark);
 }
 
 #globalHabitList {
@@ -195,15 +198,23 @@ body {
     border: 1px solid #eaeaea;
     border-radius: 12px;
     display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
+    justify-content: space-between;
+    align-items: center;
     padding: 12px;
     box-sizing: border-box;
     cursor: pointer;
-    font-weight: 600;
-    font-size: 1rem;
-    color: #555;
     transition: transform 0.15s, box-shadow 0.15s, background-color 0.2s;
+}
+
+.day-number {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #444;
+}
+
+.today-star {
+    width: 22px;
+    height: 22px;
 }
 
 .day-cell:hover {
@@ -282,9 +293,30 @@ body {
     color: var(--text-dark);
 }
 
+/* Custom Minimalist Slider Styling */
 .modal-section input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
     width: 100%;
-    accent-color: var(--pastel-red);
+    height: 6px;
+    background: #ddd;
+    border-radius: 3px;
+    outline: none;
+}
+
+.modal-section input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--pastel-red);
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+.modal-section input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
 }
 
 .modal-section textarea {
@@ -298,19 +330,21 @@ body {
     outline: none;
 }
 
+/* Light Pastel Green Save Button */
 .save-modal-btn {
     width: 100%;
-    background: var(--pastel-red);
-    color: white;
+    background: var(--pastel-green);
+    color: #2b542b;
     border: none;
     padding: 14px;
     border-radius: 8px;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
+    box-shadow: 0 3px 10px rgba(179, 255, 179, 0.4);
     transition: background 0.2s;
 }
 
 .save-modal-btn:hover {
-    background: var(--pastel-red-dark);
+    background: var(--pastel-green-dark);
 }
