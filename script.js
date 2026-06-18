@@ -7,6 +7,8 @@ const monthsArray = [
     "July", "August", "September", "October", "November", "December"
 ];
 
+const arrowSvgBase64 = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTguNSA1bDYgNi02IDZaIiBmaWxsPSIjZmY5OTk5IiBzdHJva2U9IiNmZjk5OTkiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+";
+
 function enterApp() {
     document.getElementById("welcomeOverlay").style.display = "none";
     document.getElementById("appContainer").classList.remove("app-blurred");
@@ -26,15 +28,22 @@ function renderMonthView(year, month) {
     grid.innerHTML = "";
 
     const totalDays = new Date(year, month + 1, 0).getDate();
+    const today = new Date();
+    const todayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
     for (let day = 1; day <= totalDays; day++) {
         const dayCell = document.createElement("div");
         dayCell.className = "day-cell";
-        dayCell.innerText = day;
 
         const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        const savedData = localStorage.getItem(dateKey);
         
+        let cellHTML = `<span class="day-number">${day}</span>`;
+        if (dateKey === todayKey) {
+            cellHTML += `<img class="today-star" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTEyIC41ODdsMy42NjggNy40MzEgOC4yIDEuMTkyLTUuOTM0IDUuNzg1IDEuNCA4LjE2OEwxMiAxOC44OTZsLTcuMzM0IDMuODU3IDEuNC04LjE2OEwuMTMyIDkuNDFsOC4yLTEuMTkyeiIgZmlsbD0iI2ZmYjNiMyIvPjwvc3ZnPg==" alt="Today">`;
+        }
+        dayCell.innerHTML = cellHTML;
+
+        const savedData = localStorage.getItem(dateKey);
         if (savedData) {
             const parsed = JSON.parse(savedData);
             if (parsed.rating !== undefined && parsed.rating !== "") {
@@ -135,16 +144,25 @@ function renderModalChecklist() {
 
     globalHabits.forEach(habit => {
         const label = document.createElement("label");
-        label.style.display = "block";
-        label.style.marginBottom = "5px";
+        label.className = "modal-habit-label";
 
         const box = document.createElement("input");
         box.type = "checkbox";
         box.className = "modal-habit-check";
         box.setAttribute("data-id", habit.id);
 
+        const customSpan = document.createElement("span");
+        customSpan.className = "custom-checkbox";
+
         label.appendChild(box);
-        label.appendChild(document.createTextNode(` ${habit.text}`));
+        label.appendChild(customSpan);
+        
+        const arrowImg = document.createElement("img");
+        arrowImg.className = "checklist-arrow";
+        arrowImg.src = arrowSvgBase64;
+        
+        label.appendChild(arrowImg);
+        label.appendChild(document.createTextNode(habit.text));
         container.appendChild(label);
     });
 }
@@ -198,12 +216,20 @@ function loadGlobalHabits() {
     const globalHabits = JSON.parse(localStorage.getItem("globalHabits") || "[]");
     globalHabits.forEach(habit => {
         const li = document.createElement("li");
-        li.style.display = "flex";
-        li.style.justifyContent = "space-between";
-        li.style.marginBottom = "5px";
+
+        const leftSide = document.createElement("div");
+        leftSide.style.display = "flex";
+        leftSide.style.alignItems = "center";
+
+        const arrowImg = document.createElement("img");
+        arrowImg.className = "checklist-arrow";
+        arrowImg.src = arrowSvgBase64;
 
         const textSpan = document.createElement("span");
         textSpan.innerText = habit.text;
+
+        leftSide.appendChild(arrowImg);
+        leftSide.appendChild(textSpan);
 
         const delBtn = document.createElement("button");
         delBtn.innerText = "✕";
@@ -212,7 +238,7 @@ function loadGlobalHabits() {
         delBtn.style.cursor = "pointer";
         delBtn.onclick = () => removeGlobalHabit(habit.id);
 
-        li.appendChild(textSpan);
+        li.appendChild(leftSide);
         li.appendChild(delBtn);
         list.appendChild(li);
     });
