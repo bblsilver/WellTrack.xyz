@@ -126,9 +126,6 @@ function buildYearlyHealthGraph() {
     
     let totalDaysLogged = 0;
     let totalChecklistsCompleted = 0;
-    let totalMoodDiff = 0;
-    let diffCount = 0;
-    let previousRating = null;
 
     const keys = [];
     for (let k = 0; k < localStorage.length; k++) {
@@ -150,12 +147,6 @@ function buildYearlyHealthGraph() {
                 datasetArray[monthIndex] += currentRating;
                 countArray[monthIndex]++;
                 totalDaysLogged++;
-
-                if (previousRating !== null) {
-                    totalMoodDiff += (currentRating - previousRating);
-                    diffCount++;
-                }
-                previousRating = currentRating;
             }
             if (logItem.habits) {
                 Object.values(logItem.habits).forEach(completed => {
@@ -207,11 +198,42 @@ function buildYearlyHealthGraph() {
     document.getElementById("statDaysLogged").innerText = totalDaysLogged;
     document.getElementById("statChecklistsDone").innerText = totalChecklistsCompleted;
     document.getElementById("statBestMonth").innerText = highestMonthName;
+    document.getElementById("statCurrentStreak").innerText = calculateCurrentStreak();
+}
 
-    const avgTrend = diffCount > 0 ? (totalMoodDiff / diffCount).toFixed(2) : "0.0";
-    const trendDisplay = document.getElementById("statTrendRate");
-    trendDisplay.innerText = (avgTrend > 0 ? "+" : "") + avgTrend;
-    trendDisplay.style.color = avgTrend >= 0 ? "#2b542b" : "#ff8080";
+function calculateCurrentStreak() {
+    let streakCount = 0;
+    let checkDate = new Date();
+    
+    while (true) {
+        const keyString = `${checkDate.getFullYear()}-${String(checkDate.getMonth() + 1).padStart(2, '0')}-${String(checkDate.getDate()).padStart(2, '0')}`;
+        const savedData = localStorage.getItem(keyString);
+        
+        if (savedData) {
+            const parsed = JSON.parse(savedData);
+            if (parsed.rating !== undefined && parsed.rating !== "") {
+                streakCount++;
+                checkDate.setDate(checkDate.getDate() - 1);
+                continue;
+            }
+        }
+        
+        if (streakCount === 0) {
+            checkDate.setDate(checkDate.getDate() - 1);
+            const yesterdayKey = `${checkDate.getFullYear()}-${String(checkDate.getMonth() + 1).padStart(2, '0')}-${String(checkDate.getDate()).padStart(2, '0')}`;
+            const yesterdayData = localStorage.getItem(yesterdayKey);
+            if (yesterdayData) {
+                const parsedYest = JSON.parse(yesterdayData);
+                if (parsedYest.rating !== undefined && parsedYest.rating !== "") {
+                    streakCount++;
+                    checkDate.setDate(checkDate.getDate() - 1);
+                    continue;
+                }
+            }
+        }
+        break;
+    }
+    return streakCount;
 }
 function openDayModal(dateKey) {
     selectedDateKey = dateKey;
